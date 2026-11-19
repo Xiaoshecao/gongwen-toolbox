@@ -74,11 +74,12 @@ GitHub 直连慢时，在下面任一前缀后面直接拼上 release 文件地�
 例（Windows 版）：
 
 ```
-https://gh-proxy.com/https://github.com/Xiaoshecao/gongwen-toolbox/releases/download/v3.4/gongwen-toolbox-3.4-windows-x64.exe
+https://gh-proxy.com/https://github.com/Xiaoshecao/gongwen-toolbox/releases/download/v3.4/gongwen-toolbox-3.5-windows-x64.exe
 ```
 
-三个文件都在 [Releases v3.4](https://github.com/Xiaoshecao/gongwen-toolbox/releases/tag/v3.4)：
+四个文件都在 [Releases v3.5](https://github.com/Xiaoshecao/gongwen-toolbox/releases/tag/v3.5)：
 
-- `gongwen-toolbox-3.4-windows-x64.exe`（177 MB）
-- `gongwen-toolbox-3.4-linux-arm64-portable.tar.gz`（136 MB）
-- `gongwen-toolbox-3.4-linux-arm64.AppImage`（167 MB）
+- `gongwen-toolbox-3.5-windows-x64.exe`（177 MB）
+- `gongwen-toolbox-3.5-linux-arm64-portable.tar.gz`（136 MB）
+- `gongwen-toolbox-3.5-linux-arm64.AppImage`（223 MB）
+- `LICENSE-AGPL-3.0.txt`（许可证全文）
