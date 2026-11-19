@@ -47,12 +47,18 @@ DIST="gwtyper/build/linux-dist-arm64-deb10"
 WORK="gwtyper/build/linux-work-arm64-deb10"
 LOG=".tmp/arm64_build.log"
 SO_LIST="/tmp/so_list_arm64.txt"
+BUILD_ROOT="${BUILD_ROOT:-/root/gw-build}"
 mkdir -p .tmp gwtyper/build
 
-Q="proot -q /usr/bin/qemu-aarch64-static -S $ROOTFS -b /dev -b /proc -b /sys -b /etc/resolv.conf -b $REPO:/work -w /work"
+# 为什么不在 /mnt/d 里直接构建：
+#   /mnt/d 是 Windows 盘经 9p 共享给 WSL，几万个小文件来回读写会被卡成龟速，
+#   实测 qemu 进程的 CPU 只有 13%~20%，瓶颈全在 I/O（32 分钟里大半在等磁盘）。
+#   把源码同步到 WSL 原生 ext4（/root/gw-build）再构建，通常能快 3~8 倍。
+#   产物打完再拷回 repo 的 gwtyper/build/ 下，后续打包/AppImage 逻辑不变。
+Q="proot -q /usr/bin/qemu-aarch64-static -S $ROOTFS -b /dev -b /proc -b /sys -b /etc/resolv.conf -b $BUILD_ROOT:/work -w /work"
 E="/usr/bin/env PATH=/usr/sbin:/usr/bin:/sbin:/bin LANG=C.UTF-8"
 
-echo "== 0/5 检查 rootfs =="
+echo "== 0/6 检查 rootfs =="
 if [ ! -x "$ROOTFS/usr/bin/python3" ]; then
   echo "找不到 arm64 rootfs：$ROOTFS"
   echo "先建一个 Debian 10 arm64 的 rootfs（glibc 2.28），装 python3 python3-tk python3-dev binutils 和 pyinstaller，"
@@ -62,7 +68,23 @@ fi
 $Q $E /usr/bin/python3 -c 'import sys,PyInstaller;print("rootfs python",sys.version.split()[0],"| PyInstaller",PyInstaller.__version__)' || {
   echo "rootfs 里缺 python3 / PyInstaller"; exit 1; }
 
-echo "== 1/5 解析依赖库（elfdeps，绕开 ldd）=="
+echo "== 1/6 同步源码到 WSL 原生盘（避开 /mnt 的 9p 慢速 I/O）=="
+mkdir -p "$BUILD_ROOT"
+if command -v rsync >/dev/null 2>&1; then
+  rsync -a --delete \
+    --exclude build --exclude dist --exclude __pycache__ --exclude '*.pyc' \
+    --exclude .tmp --exclude docs \
+    "$REPO/gwtyper/" "$BUILD_ROOT/gwtyper/"
+else
+  rm -rf "$BUILD_ROOT/gwtyper"
+  mkdir -p "$BUILD_ROOT/gwtyper"
+  ( cd "$REPO/gwtyper" && tar -cf - \
+      --exclude=build --exclude=dist --exclude=__pycache__ --exclude='*.pyc' \
+      --exclude=.tmp --exclude=docs . ) | tar -xf - -C "$BUILD_ROOT/gwtyper"
+fi
+echo "  源码 → $BUILD_ROOT/gwtyper（$(du -sh "$BUILD_ROOT/gwtyper" | cut -f1)）"
+
+echo "== 2/6 解析依赖库（elfdeps，绕开 ldd）=="
 SITE=/root/.local/lib/python3.7/site-packages
 # Pillow / PyMuPDF 等会带自己的一份 .libs 目录，里面是改了名字的库
 # （libjpeg-0b62f035.so.62.3.0 这种），必须一起作为查找目录。
@@ -86,7 +108,7 @@ if [ "$NLIB" -lt 30 ]; then echo "库数量异常（$NLIB），多半 elfdeps �
 if ! grep -q "libtk8.6" "$SO_LIST"; then
   echo "依赖清单里没有 libtk8.6 —— tkinter 会起不来，先查 elfdeps 的 _tkinter*.so 通配"; exit 1; fi
 
-echo "== 2/5 PyInstaller（qemu 里真跑，约 5 分钟）=="
+echo "== 3/6 PyInstaller（qemu 里真跑）=="
 rm -f "$LOG"
 $Q /usr/bin/env PATH=/usr/sbin:/usr/bin:/sbin:/bin LANG=C.UTF-8 GWTYPER_SO_LIST="$SO_LIST" \
    /usr/bin/python3 -m PyInstaller --noconfirm --clean \
@@ -96,7 +118,12 @@ rc=$?
 if [ $rc -ne 0 ]; then echo "构建失败，看 $LOG"; tail -25 "$LOG"; exit 1; fi
 grep -E "显式收集|本机缺这些库" "$LOG" | tail -2
 
-echo "== 3/5 校验架构（必须全是 aarch64）=="
+echo "  把产物拷回仓库：$DIST"
+rm -rf "$DIST"
+mkdir -p "$(dirname "$DIST")"
+cp -a "$BUILD_ROOT/$DIST" "$DIST"
+
+echo "== 4/6 校验架构（必须全是 aarch64）=="
 APP="$DIST/gwtyper"
 if [ ! -x "$APP/gwtyper" ]; then echo "没找到产物 $APP/gwtyper"; exit 1; fi
 TOTAL=$(find "$APP" -type f -print0 | xargs -0 file 2>/dev/null | grep -c "ELF")
@@ -108,7 +135,7 @@ if [ "$TOTAL" -lt 50 ] || [ "$BAD" -ne 0 ]; then
   exit 1
 fi
 
-echo "== 4/5 打包便携版 tar.gz =="
+echo "== 5/6 打包便携版 tar.gz =="
 PKGDIR=".tmp/portable-arm64/公文工具箱-$VER-arm64"
 rm -rf .tmp/portable-arm64
 mkdir -p "$PKGDIR"
@@ -137,10 +164,10 @@ tar -C .tmp/portable-arm64 -czf "$OUT_TGZ" "公文工具箱-$VER-arm64"
 echo "  → $OUT_TGZ（$(du -h "$OUT_TGZ" | cut -f1)）"
 
 if [ "$DO_APPIMAGE" = "1" ]; then
-  echo "== 5/5 打 AppImage =="
+  echo "== 6/6 打 AppImage =="
   DIST_SRC="$REPO/$APP" bash gwtyper/scripts/build_appimage.sh aarch64 || echo "AppImage 打包失败（不影响便携版）"
 else
-  echo "== 5/5 跳过 AppImage（加 --appimage 才打）=="
+  echo "== 6/6 跳过 AppImage（加 --appimage 才打）=="
 fi
 
 cat <<EOF
