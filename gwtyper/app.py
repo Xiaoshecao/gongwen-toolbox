@@ -42,7 +42,7 @@ from .ui.tools_pane import ToolsPane
 from .ui.checklist_pane import ChecklistPane
 
 APP_NAME = "公文工具箱"
-APP_VER = "3.4"
+APP_VER = "3.5"
 ROLE_CHOICES = [r.value for r in Role if r != Role.BLANK]
 
 
