@@ -1,0 +1,91 @@
+# 新闻稿 / 信息稿 —— 一页内、可配图、通常不要页码
+# 实测自「发城镇重阳节前夕走访慰问老年人.docx」
+name: 新闻稿
+page:
+  size: A4
+  top_cm: 3.7
+  bottom_cm: 3.5
+  left_cm: 2.8
+  right_cm: 2.6
+  footer_cm: 2.8
+features:
+  page_number: false
+  page_number_fmt: "— {n} —"
+  page_number_font: 宋体
+  page_number_size_pt: 14
+  header_rule: false
+  end_mark: false
+  max_pages: 1
+
+roles:
+  title:
+    font: 方正小标宋简体
+    size_pt: 22
+    align: center
+    line_pt: 30
+    first_line_chars: 0
+    space_after_pt: 18
+  subtitle:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: center
+    line_pt: 28
+    space_before_pt: 0
+    space_after_pt: 12
+  h1:
+    font: 黑体
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  h2:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  h3:
+    font: 仿宋_GB2312
+    size_pt: 16
+    bold: true
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  body:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  lead:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  table_caption:
+    font: 方正小标宋简体
+    size_pt: 16
+    align: center
+    line_pt: 28
+    first_line_chars: 0
+  note:
+    font: 仿宋_GB2312
+    size_pt: 12
+    align: left
+    line_pt: 20
+    first_line_chars: 0
+  signature:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: right
+    line_pt: 28
+    first_line_chars: 0
+    right_indent_chars: 2
+  date:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: right
+    line_pt: 28
+    first_line_chars: 0
+    right_indent_chars: 2

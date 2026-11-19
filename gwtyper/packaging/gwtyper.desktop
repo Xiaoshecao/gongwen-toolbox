@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=公文排版工具
+Name[en]=Gongwen Typer
+Comment=按 GB/T 9704 体检与排版公文（Word .docx / .doc）
+Comment[en]=Check and format Chinese official documents per GB/T 9704
+Exec=gwtyper %f
+Icon=gwtyper
+Terminal=false
+Categories=Office;WordProcessor;
+MimeType=application/vnd.openxmlformats-officedocument.wordprocessingml.document;application/msword;
+Keywords=公文;排版;格式;docx;word;office;
+StartupWMClass=gwtyper

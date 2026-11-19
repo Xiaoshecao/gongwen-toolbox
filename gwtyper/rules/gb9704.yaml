@@ -1,0 +1,95 @@
+# 标准公文（GB/T 9704-2012）—— 红头文件、通知、报告类默认
+name: 标准公文
+page:
+  size: A4
+  top_cm: 3.7
+  bottom_cm: 3.5
+  left_cm: 2.8
+  right_cm: 2.6
+  footer_cm: 2.8          # 页码距页脚
+features:
+  page_number: true        # 4 号半角宋体阿拉伯数字，一字线
+  page_number_fmt: "— {n} —"
+  page_number_font: 宋体
+  page_number_size_pt: 14
+  header_rule: true        # 红头分隔线
+  end_mark: false
+
+table:                     # 表格内文字（GB/T 9704 未硬性规定，按惯例小一号）
+  font: 仿宋_GB2312
+  size_pt: 14
+  align: center
+
+roles:
+  title:
+    font: 方正小标宋简体
+    size_pt: 22
+    align: center
+    line_pt: 32
+    first_line_chars: 0
+    space_after_pt: 18
+  subtitle:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: center
+    line_pt: 28
+    space_after_pt: 12
+  h1:
+    font: 黑体
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  h2:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  h3:
+    font: 仿宋_GB2312
+    size_pt: 16
+    bold: true
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  body:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  lead:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  table_caption:
+    font: 方正小标宋简体
+    size_pt: 16
+    align: center
+    line_pt: 28
+    first_line_chars: 0
+    space_before_pt: 6
+    space_after_pt: 6
+  note:
+    font: 仿宋_GB2312
+    size_pt: 12
+    align: left
+    line_pt: 20
+    first_line_chars: 0
+  signature:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: right
+    line_pt: 28
+    first_line_chars: 0
+    right_indent_chars: 2
+  date:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: right
+    line_pt: 28
+    first_line_chars: 0
+    right_indent_chars: 2

@@ -1,0 +1,47 @@
+# 构建产物（体积大，走 Releases）
+*.exe
+*.AppImage
+*.tar.gz
+*.zip
+*.7z
+build/
+dist/
+dist_*/
+linux-dist*/
+linux-work*/
+
+# 临时与缓存
+__pycache__/
+*.py[cod]
+*.log
+*.tmp
+*.bak
+.tmp/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+
+# 用户数据与样张（不入库）
+prefs.json
+villages*.txt
+village_status.json
+*.docx
+*.xlsx
+*.pdf
+*.jpg
+*.jpeg
+# 图标例外
+!gwtyper/assets/icon.png
+!gwtyper/assets/icon.ico
+!converter/assets/icon.png
+!converter/assets/icon.ico

@@ -1,0 +1,54 @@
+#!/bin/sh
+# AppImage 入口脚本。AppImage 挂载到 $APPDIR。
+#
+# 两种打包模式下 AppDir 里放的东西不一样：
+#   full —— usr/lib/gwtyper-dist/gwtyper（PyInstaller 打的，自带 Python 运行时）
+#   thin —— usr/share/gwtyper/gwtyper（纯源码，要系统 python3）
+set -e
+
+HERE="${APPDIR:-$(dirname "$(readlink -f "$0")")}"
+
+# 包里自带的中文字体，让 fontconfig 能看见（只对本次运行生效，不污染系统）
+if [ -d "$HERE/usr/share/fonts/truetype/gwtyper" ]; then
+    export FONTCONFIG_PATH="$HERE/usr/share/fonts"
+    export FONTCONFIG_FILE="$HERE/usr/share/fonts/gwtyper-fonts.conf"
+fi
+
+# 内嵌 LibreOffice。
+# 注意：**不要**把它的依赖库目录加进 LD_LIBRARY_PATH —— LibreOffice 会把
+# LD_LIBRARY_PATH 的第一个目录当成自己的安装根，去那儿找 unorc，
+# 找不到就报 "The component manager is not available" 然后段错误。
+# 依赖库已经直接放进 program/ 里，同目录加载，什么都不用设。
+if [ -d "$HERE/usr/lib/libreoffice" ]; then
+    export GWTYPER_LO_BUNDLE="$HERE/usr/lib/libreoffice"
+fi
+
+# 自带运行时的完整包，直接跑，不依赖系统 python
+if [ -x "$HERE/usr/lib/gwtyper-dist/gwtyper" ]; then
+    exec "$HERE/usr/lib/gwtyper-dist/gwtyper" "$@"
+fi
+
+APP="$HERE/usr/share/gwtyper"
+
+# 薄包才需要系统 python3，缺了给一句明确的提示，而不是让人看一堆 ImportError
+if ! command -v python3 >/dev/null 2>&1; then
+    MSG="没有找到 python3。这个轻量包需要系统装 Python 3 与 tkinter。\n\nDebian/Ubuntu：sudo apt install python3 python3-tk python3-docx python3-yaml python3-fitz python3-pil\nFedora：sudo dnf install python3 python3-tkinter python-docx python3-pyyaml python3-pymupdf\n\n或者换用「完整版」AppImage（体积大一些，但不需要装这些）。"
+    if command -v zenity >/dev/null 2>&1; then
+        zenity --error --text="$MSG" --title="公文排版工具"
+    else
+        printf "%b\n" "$MSG" >&2
+    fi
+    exit 1
+fi
+
+export PYTHONPATH="$APP${PYTHONPATH:+:$PYTHONPATH}"
+
+# 完整包自带 LibreOffice；只有薄包才需要系统里有办公软件
+if [ -z "$GWTYPER_LO_BUNDLE" ] \
+   && ! command -v soffice >/dev/null 2>&1 \
+   && ! command -v libreoffice >/dev/null 2>&1 \
+   && ! command -v wps >/dev/null 2>&1; then
+    echo "提醒：未检测到办公软件，版面预览会不可用（转 PDF 仍可用纯 Python 引擎）。" >&2
+fi
+
+exec python3 "$APP/gwtyper/packaging/entry.py" "$@"
