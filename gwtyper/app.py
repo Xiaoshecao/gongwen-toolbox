@@ -691,6 +691,24 @@ class App(Base):
         self._refresh_profile_combo()
         self._sync_profile_tip()
 
+    def show_about(self) -> None:
+        """关于 / 许可证。"""
+        messagebox.showinfo(
+            f"关于 {APP_NAME}",
+            f"{APP_NAME} {APP_VER}\n"
+            "面向基层办公的公文处理工具\n\n"
+            "许可证：GNU AGPL-3.0（GNU Affero 通用公共许可证第 3 版）\n"
+            "  · 可自由使用、修改、再分发\n"
+            "  · 分发（含修改后的版本）须同样以 AGPL-3.0 开源并保留本声明\n\n"
+            "源代码：https://github.com/Xiaoshecao/gongwen-toolbox\n"
+            "第三方组件：见仓库 THIRD_PARTY_NOTICES.md\n"
+            "  · PyMuPDF —— AGPL-3.0 / Artifex 商业双许可\n"
+            "  · LibreOffice（Linux 版内置）—— MPL-2.0\n"
+            "  · 文泉驿正黑/微米黑 —— GPL-2.0 附字体嵌入例外\n"
+            "  · 其余组件 —— MIT / BSD / Apache-2.0\n\n"
+            "Copyright © 2026",
+        )
+
     def _more_menu(self) -> None:
         m = tk.Menu(self, tearoff=0)
         m.add_command(label="一键处理（体检 + 排版 + 导 PDF + 报告）…",
@@ -722,6 +740,7 @@ class App(Base):
         m.add_command(label="打开我的规则目录", command=self.open_rules_dir)
         m.add_command(label="清理后台 WPS 残留进程", command=self.clean_zombies)
         m.add_separator()
+        m.add_command(label="关于 / 许可证…", command=self.show_about)
         m.add_command(label="清空列表", command=self.clear_files)
         try:
             x = self.winfo_pointerx()
