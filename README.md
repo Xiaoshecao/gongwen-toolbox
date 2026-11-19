@@ -61,3 +61,26 @@ python -m gwtyper doctor                            # 自查环境（引擎/字�
 ## 许可
 
 暂未指定开源许可证；如需对外分发请先与作者确认。
+
+## 下载（国内加速）
+
+GitHub 直连慢时，在下面任一前缀后面直接拼上 release 文件地址即可（前缀 + 完整 URL）：
+
+| 代理前缀 | 实测速度 |
+|---|---|
+| `https://gh-proxy.com/` | 约 2.6 MB/s |
+| `https://ghfast.top/` | 约 1.5 MB/s |
+| `https://edgeone.gh-proxy.com/` | 约 1.8 MB/s |
+| `https://ghproxy.net/` | 可用 |
+
+例（Windows 版）：
+
+```
+https://gh-proxy.com/https://github.com/Xiaoshecao/gongwen-toolbox/releases/download/v3.4/gongwen-toolbox-3.4-windows-x64.exe
+```
+
+三个文件都在 [Releases v3.4](https://github.com/Xiaoshecao/gongwen-toolbox/releases/tag/v3.4)：
+
+- `gongwen-toolbox-3.4-windows-x64.exe`（177 MB）
+- `gongwen-toolbox-3.4-linux-arm64-portable.tar.gz`（136 MB）
+- `gongwen-toolbox-3.4-linux-arm64.AppImage`（167 MB）
