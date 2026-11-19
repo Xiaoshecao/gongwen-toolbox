@@ -58,9 +58,7 @@ python -m gwtyper doctor                            # 自查环境（引擎/字�
 - 格式标准：`gwtyper/rules/*.yaml`（`gb9704` 国家标准 / `news` 新闻稿 / `report` 述职报告）
 - 用户自定义标准存放在 `%LOCALAPPDATA%\公文排版工具\rules`（Linux 为 `~/.local/share/公文排版工具/rules`），与仓库里的默认值互不影响
 
-## 许可
-
-暂未指定开源许可证；如需对外分发请先与作者确认。
+本项目以 **GNU Affero 通用公共许可证第 3 版（AGPL-3.0-or-later）** 发布：可自由使用、修改、再分发；分发（含修改版）时须同样以 AGPL-3.0 开源并保留声明。许可证全文见 [LICENSE](LICENSE)，随包第三方组件见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ## 下载（国内加速）
 
