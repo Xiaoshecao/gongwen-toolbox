@@ -13,7 +13,7 @@ from pathlib import Path
 
 APP_TITLE = "公文工具箱"
 # 目录名故意还用旧名：用户已经在 %LOCALAPPDATA%\公文排版工具\rules 里存了自己的
-# 格式标准（如 发城.yaml），改成新名会让这些设置"消失"。改名只改窗口标题。
+# 格式标准（如 我的模板.yaml），改成新名会让这些设置"消失"。改名只改窗口标题。
 APP_NAME = "公文排版工具"
 IS_WIN = sys.platform.startswith("win")
 IS_MAC = sys.platform == "darwin"

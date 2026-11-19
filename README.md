@@ -55,7 +55,7 @@ python -m gwtyper doctor                            # 自查环境（引擎/字�
 
 ## 规则与数据文件
 
-- 格式标准：`gwtyper/rules/*.yaml`（`gb9704` 国家标准 / `news` 新闻稿 / `report` 述职报告 / `发城` 自定义示例）
+- 格式标准：`gwtyper/rules/*.yaml`（`gb9704` 国家标准 / `news` 新闻稿 / `report` 述职报告）
 - 用户自定义标准存放在 `%LOCALAPPDATA%\公文排版工具\rules`（Linux 为 `~/.local/share/公文排版工具/rules`），与仓库里的默认值互不影响
 
 ## 许可
