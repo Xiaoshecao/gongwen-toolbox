@@ -1,0 +1,96 @@
+# 报告类（述职述德述廉、工作总结）—— 页边距按机关常用 3.0/2.8/2.8/2.8
+# 实测自「述职述廉报告-谭钊（最终版）.docx」
+name: 报告类
+page:
+  size: A4
+  top_cm: 3.0
+  bottom_cm: 2.8
+  left_cm: 2.8
+  right_cm: 2.8
+  footer_cm: 2.8
+features:
+  page_number: true
+  page_number_fmt: "— {n} —"
+  page_number_font: 宋体
+  page_number_size_pt: 14
+  header_rule: false
+  end_mark: false
+
+table:
+  font: 仿宋_GB2312
+  size_pt: 14
+  align: center
+
+roles:
+  title:
+    font: 方正小标宋简体
+    size_pt: 22
+    align: center
+    line_pt: 32
+    first_line_chars: 0
+    space_after_pt: 6
+  subtitle:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: center
+    line_pt: 28
+    space_after_pt: 6
+  h1:
+    font: 黑体
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  h2:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  h3:
+    font: 仿宋_GB2312
+    size_pt: 16
+    bold: true
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  body:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  lead:
+    font: 楷体_GB2312
+    size_pt: 16
+    align: justify
+    line_pt: 28
+    first_line_chars: 2
+  table_caption:
+    font: 方正小标宋简体
+    size_pt: 16
+    align: center
+    line_pt: 28
+    first_line_chars: 0
+    space_before_pt: 6
+    space_after_pt: 6
+  note:
+    font: 仿宋_GB2312
+    size_pt: 12
+    align: left
+    line_pt: 20
+    first_line_chars: 0
+  signature:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: right
+    line_pt: 28
+    first_line_chars: 0
+    right_indent_chars: 2
+  date:
+    font: 仿宋_GB2312
+    size_pt: 16
+    align: right
+    line_pt: 28
+    first_line_chars: 0
+    right_indent_chars: 2
