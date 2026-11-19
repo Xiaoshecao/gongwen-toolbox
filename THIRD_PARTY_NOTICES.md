@@ -41,12 +41,48 @@
 > PyInstaller 的许可证带有「打包例外（Bootloader Exception）」：允许将本程序打包成可执行文件并以其他许可证分发，
 > 该例外不要求本程序开源；此处致谢其作者。
 
+
+## 一·补、4.0 重构版（Qt 界面）新增的第三方组件
+
+4.0 版把界面从 Tcl/Tk 换成 Qt（PySide6）。下表是**这一版新引入**的组件；上一节列的内核依赖
+（PyMuPDF、python-docx、RapidOCR 等）在 4.0 里照旧使用。
+
+| 组件 | 版本 | 许可证 | 项目主页 |
+|---|---|---|---|
+| PySide6（含 PySide6-Essentials / Addons） | 6.12.0 | **LGPL-3.0**（亦可选 GPL-2.0 / GPL-3.0 / 商业许可） | https://doc.qt.io/qtforpython-6/ |
+| shiboken6（Python 绑定层） | 6.12.0 | **LGPL-3.0** | https://doc.qt.io/qtforpython-6/ |
+| Qt 6：Core / Gui / Widgets | 6.12 | **LGPL-3.0** | https://www.qt.io/ |
+| Qt 6：**Qt PDF / Qt PDF Widgets**（版面预览用） | 6.12 | **GPL-3.0**（QtPdf 模块只提供 GPL 与商业两种许可，没有 LGPL 版本） | https://code.qt.io/cgit/qt/qtwebengine.git/ |
+| libxcb 系列（xcb / xcb-cursor / xcb-icccm / xcb-image / xcb-keysyms / xcb-render-util / xcb-shape / xcb-xinerama / xcb-xkb 等） | — | MIT | https://xcb.freedesktop.org/ |
+| libxkbcommon / libxkbcommon-x11 | — | MIT | https://github.com/xkbcommon/libxkbcommon |
+| libX11 / libXext / libXrender / libXi / libXfixes / libXcursor / libSM / libICE / libXau / libXdmcp | — | MIT | https://gitlab.freedesktop.org/xorg/lib |
+| libGL / libEGL / libGLX / libGLdispatch（Mesa） | — | MIT（SGI Free Software B） | https://mesa3d.org/ |
+| FreeType | 2.x | FTL 或 GPL-2.0（双许可，本项目按 FTL 使用） | https://freetype.org/ |
+| fontconfig | 2.x | MIT 风格许可 | https://www.freedesktop.org/wiki/Software/fontconfig/ |
+| libb2（BLAKE2） | — | CC0-1.0 | https://github.com/BLAKE2/libb2 |
+| libmd4c | — | MIT | https://github.com/mity/md4c |
+| libdbus-1 | — | AFL-2.1 或 GPL-2.0（双许可） | https://www.freedesktop.org/wiki/Software/dbus/ |
+| zlib / libpng / libjpeg-turbo / libtiff / libwebp / liblzma / bzip2 | — | zlib / libpng / IJG / libtiff / BSD / 0BSD / bzip2-1.0.6 | 各项目官网 |
+
+### 关于 LGPL-3.0 与 GPL-3.0 的合规做法
+
+1. **动态链接**：PySide6 / Qt 的库在发布包里是**独立的动态库**（Windows 版解包后的 `_internal\PySide6\`、
+   Linux 版 onedir 的 `_internal/` 里），程序本体只是调用它们，可按 LGPL-3.0 第 4 条**替换成你自己编译的
+   同版本库**而无需修改本程序。所需的头文件与源码可从 PySide6 / Qt 官方获取。
+2. **QtPdf 是 GPL-3.0**：本项目整体以 **AGPL-3.0-or-later** 发布，AGPL-3.0 与 GPL-3.0 兼容，
+   因此同时使用两者没有问题；本项目源码已完整公开。
+3. 若你所在单位要求**完全避开 GPL/LGPL**，可购买 Qt 商业许可（含 QtPdf），或改用不含预览功能的构建。
+4. 许可证全文：
+   - LGPL-3.0：https://www.gnu.org/licenses/lgpl-3.0.html
+   - GPL-3.0：https://www.gnu.org/licenses/gpl-3.0.html
+   - FreeType FTL：https://freetype.org/license.html
+
 ## 二、运行时环境
 
 | 组件 | 版本 | 许可证 | 说明 |
 |---|---|---|---|
-| Python | 3.12（Windows 版）/ 3.7（ARM64 版） | PSF License | 解释器随程序打包 |
-| Tcl / Tk | 8.6 | BSD 风格（Tcl/Tk License） | 图形界面库随程序打包 |
+| Python | 3.12（Windows / Linux x86_64 版）/ 3.7（ARM64 麒麟版） | PSF License | 解释器随程序打包 |
+| Tcl / Tk | 8.6 | BSD 风格（Tcl/Tk License） | **仅 3.x 版（tkinter 界面）**；4.0 Qt 版不含 Tcl/Tk |
 | zlib / OpenSSL 等系统库 | — | zlib / Apache-2.0 | 随 Python 运行时分发 |
 
 ## 三、Linux 版内置的第三方程序与字体
