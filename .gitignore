@@ -45,3 +45,7 @@ village_status.json
 !gwtyper/assets/icon.ico
 !converter/assets/icon.png
 !converter/assets/icon.ico
+
+# Qt 版单文件解包目录
+rt/
+gongwen-qt/dist*/

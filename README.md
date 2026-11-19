@@ -4,8 +4,10 @@
 规则基准为 **GB/T 9704**（党政机关公文格式），所有参数都可自定义替换。
 
 - 运行平台：Windows 10/11、Linux（x86_64、ARM64／麒麟 V10）
-- 语言：Python 3（Windows 打包版自带运行时，用户无需安装 Python）
-- 界面：tkinter（正在评估迁移到 Qt，见 `重构方案-架构建议.md`）
+- 语言：Python 3（打包版自带运行时，用户无需安装 Python，也不需要装 Office）
+- 界面：**4.0 起为 PySide6（Qt）**；3.x 为 tkinter（源码保留在 `gwtyper/`，功能相同）
+
+> **4.0 是什么**：界面从 tkinter 重写为 Qt，功能与 3.5 一致，**启动更快、大文件表格不卡**（实测窗口构建 3149ms → 约 300–600ms，1 万行表格滚动 7.5ms/次）。内核一行没改，仍复用 `gwtyper/core`，规则与输出完全一致。Qt 版源码在 `gongwen-qt/`。
 
 ## 功能一览
 
@@ -23,16 +25,24 @@
 ## 目录结构
 
 ```
-gwtyper/            主程序（Python 包）
+gwtyper/            3.x 主程序（Python 包，tkinter 界面；内核仍被 4.0 复用）
   app.py            主窗口（tkinter）
   core/             内核：解析/分类/检查/排版/转换/PDF/OCR/规则
   ui/               各页签界面
   rules/            格式标准（YAML，可自定义）
-  scripts/          各平台打包脚本
+  scripts/          各平台打包脚本（含 arm64 交叉构建）
   tests/            回归用例
   README.md         详细使用说明（启动方式、规则说明、打包步骤、已知限制）
+gongwen-qt/         4.0 主程序（PySide6 界面）
+  main.py           入口
+  ui/               主题、侧边栏、关于、控件、预览
+  pages/            各功能页（公文排版 / 格式转换 / OCR / 小工具 / PDF / 模板库 …）
+  build_win.spec    Windows onedir 打包配置
+  build_win_onefile.spec  Windows 单文件 exe（含 runtime_tmpdir，避免中文路径问题）
+  build_linux.spec  Linux x86_64 打包配置
+  PERF.md           与 3.x 的性能对比实测
 converter/          早期的「格式转换器」（能力已整合进 gwtyper，保留源码备查）
-重构方案-架构建议.md   下一版重构的架构选型与计划
+重构方案-架构建议.md   重构的架构选型与计划（已按方案甲落地为 4.0）
 ```
 
 ## 快速开始（源码运行）
