@@ -114,7 +114,7 @@ chk("gb9704 内容正常", rules.load("gb9704")["roles"]["body"]["font"] == "仿
 # ---------------------------------------------------------------- 真机端到端
 if REAL_LINUX and eng:
     print("== 端到端：真实 docx → PDF（soffice 通道） ==")
-    sample = ROOT / "示例-重阳节走访慰问.docx"
+    sample = ROOT / "发城镇重阳节前夕走访慰问老年人.docx"
     if not sample.exists():
         print("  跳过：样本不存在")
     else:
@@ -127,13 +127,13 @@ if REAL_LINUX and eng:
             doc = fitz.open(str(pdf))
             chk("PDF 页数 >= 1", doc.page_count >= 1, f"({doc.page_count} 页)")
             txt = "".join(doc[i].get_text() for i in range(doc.page_count))
-            chk("PDF 里有正常中文（不是方块/空）", "重阳" in txt or "老人" in txt, f"({len(txt)} 字)")
+            chk("PDF 里有正常中文（不是方块/空）", "发城" in txt or "老人" in txt, f"({len(txt)} 字)")
             doc.close()
         except Exception as exc:  # noqa: BLE001
             chk("端到端转换", False, f"{type(exc).__name__}: {exc}")
 
     print("== 端到端：体检 + 排版（不依赖 Office 的部分） ==")
-    sample = ROOT / "示例-重阳节走访慰问.docx"
+    sample = ROOT / "发城镇重阳节前夕走访慰问老年人.docx"
     if sample.exists():
         from gwtyper.core import apply as applymod
         from gwtyper.core import check as checkmod

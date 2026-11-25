@@ -24,7 +24,7 @@ from pages.tools_pages import IMG_EXT, DOC_EXT, _page_head
 def _out_row(lay, default_name: str):
     row = QHBoxLayout()
     row.addWidget(QLabel("保存到"))
-    ed = QLineEdit(str(Path(sysenv.desktop_dir()) / default_name))
+    ed = QLineEdit(str(Path(sysenv.export_dir()) / default_name))
     row.addWidget(ed, 1)
     btn = QPushButton("浏览…")
     row.addWidget(btn)
@@ -236,7 +236,7 @@ class DupPage(QWidget):
             QMessageBox.information(self, "还没有结果", "先点「开始查重」。")
             return
         dst, _ = QFileDialog.getSaveFileName(self, "导出 CSV",
-                                             str(Path(sysenv.desktop_dir()) / "查重结果.csv"),
+                                             str(Path(sysenv.export_dir()) / "查重结果.csv"),
                                              "CSV (*.csv)")
         if not dst:
             return
@@ -415,7 +415,7 @@ class MergeTablePage(QWidget):
         right, rl = card("汇总成一张")
         row = QHBoxLayout()
         row.addWidget(QLabel("输出文件"))
-        self.out = QLineEdit(str(Path(sysenv.desktop_dir()) / "数据汇总.xlsx"))
+        self.out = QLineEdit(str(Path(sysenv.export_dir()) / "数据汇总.xlsx"))
         row.addWidget(self.out, 1)
         btn = QPushButton("另存为…")
         row.addWidget(btn)
@@ -610,7 +610,7 @@ class ListDiffPage(QWidget):
             QMessageBox.information(self, "还没比对", "先点「开始比对」。")
             return
         dst, _ = QFileDialog.getSaveFileName(self, "导出结果",
-                                             str(Path(sysenv.desktop_dir()) / "名单比对.txt"),
+                                             str(Path(sysenv.export_dir()) / "名单比对.txt"),
                                              "文本 (*.txt)")
         if not dst:
             return

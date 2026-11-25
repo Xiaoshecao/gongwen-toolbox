@@ -181,7 +181,7 @@ class OcrPage(QWidget):
 
         row2 = QHBoxLayout()
         row2.addWidget(QLabel("保存到"))
-        self.out = QLineEdit(str(Path(sysenv.desktop_dir()) / "识别结果"))
+        self.out = QLineEdit(str(Path(sysenv.export_dir()) / "识别结果"))
         row2.addWidget(self.out, 1)
         self.btn_browse = QPushButton("浏览…")
         row2.addWidget(self.btn_browse)

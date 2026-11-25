@@ -182,7 +182,7 @@ class ApplyDialog(QDialog):
         row = QHBoxLayout()
         self.rb_dir = QRadioButton("放到指定文件夹")
         row.addWidget(self.rb_dir)
-        self.ed_dir = QLineEdit(str(Path(sysenv.desktop_dir()) / "排版结果"))
+        self.ed_dir = QLineEdit(str(Path(sysenv.export_dir()) / "排版结果"))
         self.ed_dir.setEnabled(False)
         row.addWidget(self.ed_dir, 1)
         self.btn_browse = QPushButton("浏览…")
@@ -257,6 +257,9 @@ class FormatPage(QWidget):
         self.btn_rules = QPushButton("格式标准设置…")
         self.btn_rules.setToolTip("调页边距、页码、各段落的字体字号行距（可另存为自己的标准）")
         bar.addWidget(self.btn_rules)
+        self.btn_learn_rules = QPushButton("从文件学标准…")
+        self.btn_learn_rules.setToolTip("给一份已经排好的公文，我学出它的页边距、字号、行距，存成一套新标准")
+        bar.addWidget(self.btn_learn_rules)
         bar.addStretch(1)
         self.btn_add = QPushButton("添加文件…")
         self.btn_apply = QPushButton("按规则排版…")
@@ -328,6 +331,7 @@ class FormatPage(QWidget):
         self.btn_check.clicked.connect(self.run_check)
         self.btn_apply.clicked.connect(self.run_apply)
         self.btn_rules.clicked.connect(self.open_rules_editor)
+        self.btn_learn_rules.clicked.connect(self.learn_from_file)
         self.combo.currentIndexChanged.connect(lambda _i: None)
         self.list.currentRowChanged.connect(lambda _i: self._preview_current())
         self.prev_mode.currentIndexChanged.connect(lambda _i: self._preview_current())
@@ -353,6 +357,36 @@ class FormatPage(QWidget):
         w = QLabel(text)
         w.setObjectName("H2")
         return w
+
+    def learn_from_file(self):
+        """从一份已排好的公文里学出一套格式标准（页边距、字号、行距、缩进）。"""
+        from PySide6.QtWidgets import QFileDialog, QInputDialog, QMessageBox
+        f, _ = QFileDialog.getOpenFileName(self, "选一份已经排好的公文", "", "Word 文档 (*.docx)")
+        if not f:
+            return
+        try:
+            from gwtyper.core import learn as learnmod
+            prof = learnmod.learn(f)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "学不了", f"读这份文件时出错：{exc}")
+            return
+        name, ok = QInputDialog.getText(self, "给这套标准起个名字", "名字：",
+                                        text=str(prof.get("name") or "参照件标准"))
+        if not ok:
+            return
+        prof["name"] = (name or "").strip() or prof.get("name")
+        try:
+            from gwtyper.core import rules as rulesmod
+            target = rulesmod.save_target(prof["name"])
+            learnmod.save(prof, target)
+            rulesmod._load_path.cache_clear()
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "存不了", str(exc))
+            return
+        self._fill_profiles(keep=target.stem)
+        QMessageBox.information(self, "学好了",
+                                f"已按这份文件生成格式标准「{prof['name']}」，并切换过去。\n"
+                                "可以直接点「按规则排版…」用这套标准排别的公文。")
 
     # ---- 格式标准 ----
     def _profiles(self):

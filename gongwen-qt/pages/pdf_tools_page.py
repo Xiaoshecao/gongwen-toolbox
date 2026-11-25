@@ -60,7 +60,7 @@ class PdfToolsPage(QWidget):
 
         row = QHBoxLayout()
         row.addWidget(QLabel("保存到"))
-        self.out = QLineEdit(str(Path(sysenv.desktop_dir()) / "PDF 处理结果"))
+        self.out = QLineEdit(str(Path(sysenv.export_dir()) / "PDF 处理结果"))
         row.addWidget(self.out, 1)
         btn = QPushButton("浏览…")
         row.addWidget(btn)

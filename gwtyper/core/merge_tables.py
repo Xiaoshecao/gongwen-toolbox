@@ -6,19 +6,53 @@ from pathlib import Path
 
 
 def _rows(path) -> list[list]:
+    """读一个文件的前几列/行。支持 .xlsx / .xlsm / .csv。"""
+    p = Path(path)
+    ext = p.suffix.lower()
+
+    if ext == ".csv":
+        return _rows_csv(p)
+    if ext == ".xls":
+        raise RuntimeError("老 .xls 读不了，请先在 Excel/WPS 里「另存为 .xlsx」")
+    if ext not in (".xlsx", ".xlsm"):
+        raise RuntimeError(f"不认识的表格格式：{ext or '没有扩展名'}（只认 .xlsx / .xlsm / .csv）")
+
     from openpyxl import load_workbook
 
-    wb = load_workbook(str(path), read_only=True, data_only=True)
+    wb = load_workbook(str(p), read_only=True, data_only=True)
     try:
-        ws = wb.active
         out = []
-        for row in ws.iter_rows(values_only=True):
-            vals = ["" if v is None else v for v in row]
-            if any(str(v).strip() for v in vals):
-                out.append(vals)
+        for ws in wb.worksheets:          # 所有工作表都收，不只第一个
+            for row in ws.iter_rows(values_only=True):
+                vals = ["" if v is None else v for v in row]
+                if any(str(v).strip() for v in vals):
+                    out.append(vals)
+            if out:
+                break                     # 第一个有内容的工作表就够
         return out
     finally:
         wb.close()
+
+
+def _rows_csv(p: Path) -> list[list]:
+    import csv as _csv
+
+    raw = p.read_bytes()
+    text = None
+    for enc in ("utf-8-sig", "utf-8", "gb18030", "utf-16"):
+        try:
+            text = raw.decode(enc)
+            break
+        except UnicodeDecodeError:
+            continue
+    if text is None:
+        text = raw.decode("gb18030", "replace")
+    out = []
+    for row in _csv.reader(text.splitlines()):
+        vals = ["" if v is None else v for v in row]
+        if any(str(v).strip() for v in vals):
+            out.append(vals)
+    return out
 
 
 def summarize(files, out, source_col: str = "来源文件", progress=None) -> dict:
@@ -60,7 +94,9 @@ def summarize(files, out, source_col: str = "来源文件", progress=None) -> di
                 pass
 
     if not data:
-        raise ValueError("这些文件里没读到数据。确认是 .xlsx 表格，且第一行是表头。")
+        detail = "\n".join(f"· {n}：{why}" for n, why in skipped[:8]) or "· 没有任何文件"
+        raise ValueError("没读到可汇总的数据：\n" + detail +
+                         "\n\n要求：表格第一行是表头，下面是要汇总的数据行。")
 
     cols = headers + [source_col]
     wb = Workbook()

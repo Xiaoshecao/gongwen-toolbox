@@ -13,7 +13,7 @@ from pathlib import Path
 
 APP_TITLE = "公文工具箱"
 # 目录名故意还用旧名：用户已经在 %LOCALAPPDATA%\公文排版工具\rules 里存了自己的
-# 格式标准（如 我的模板.yaml），改成新名会让这些设置"消失"。改名只改窗口标题。
+# 格式标准（如 发城.yaml），改成新名会让这些设置"消失"。改名只改窗口标题。
 APP_NAME = "公文排版工具"
 IS_WIN = sys.platform.startswith("win")
 IS_MAC = sys.platform == "darwin"
@@ -192,3 +192,49 @@ def platform_note() -> str:
     if IS_MAC:
         return "macOS"
     return "Linux"
+
+
+def documents_dir() -> Path:
+    """「文档」目录（Windows 问 Shell，其他平台按惯例）。"""
+    if IS_WIN:
+        try:
+            import ctypes
+            from ctypes import wintypes
+
+            CSIDL_PERSONAL = 0x0005
+            buf = ctypes.create_unicode_buffer(wintypes.MAX_PATH)
+            if ctypes.windll.shell32.SHGetFolderPathW(None, CSIDL_PERSONAL, None, 0, buf) == 0 and buf.value:
+                p = Path(buf.value)
+                if p.is_dir():
+                    return p
+        except Exception:  # noqa: BLE001
+            pass
+    return Path.home()
+
+
+def writable(p) -> bool:
+    """真写一下试试——Windows 上「有权限」和「能写」经常不是一回事。"""
+    p = Path(p)
+    try:
+        p.mkdir(parents=True, exist_ok=True)
+        t = p / ".gw_write_test"
+        t.write_text("x", encoding="utf-8")
+        t.unlink()
+        return True
+    except OSError:
+        return False
+
+
+def export_dir() -> Path:
+    """默认输出目录：优先桌面，桌面不能写就退「文档」→ 程序数据目录下的「导出」。
+
+    Windows 上如果程序被装进 Program Files、或者桌面被安全软件锁住，
+    直接往桌面写会弹「需要管理员权限」；这里提前挑一个确定能写的目录。
+    """
+    for cand in (desktop_dir(), documents_dir(), data_dir() / "导出"):
+        try:
+            if writable(cand):
+                return Path(cand)
+        except OSError:
+            continue
+    return data_dir()

@@ -258,7 +258,7 @@ class ChecklistPage(QWidget):
             QMessageBox.information(self, "都交了", "全部交齐，没有未交的。")
             return
         p, flt = QFileDialog.getSaveFileName(
-            self, "导出未交清单", str(Path(sysenv.desktop_dir()) / "未交清单.txt"),
+            self, "导出未交清单", str(Path(sysenv.export_dir()) / "未交清单.txt"),
             "文本 (*.txt);;CSV (*.csv)")
         if not p:
             return

@@ -2,6 +2,7 @@
 """公文模板库（Qt 版）：通知/请示/报告/函/纪要/情况汇报/证明。"""
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from PySide6.QtCore import Qt
@@ -87,13 +88,24 @@ class TemplatePage(QWidget):
         for k, w in self._widgets.items():
             values[k] = w.toPlainText() if isinstance(w, QPlainTextEdit) else w.text()
         name = values.get("title") or T.TEMPLATES[self._key].get("name", "公文")
+        name = re.sub(r'[\\/:*?"<>|\r\n]+', "", str(name)).strip() or "公文"
         dst, _ = QFileDialog.getSaveFileName(
-            self, "保存", str(Path(sysenv.desktop_dir()) / f"{name}.docx"), "Word (*.docx)")
+            self, "保存", str(Path(sysenv.export_dir()) / f"{name}.docx"), "Word (*.docx)")
         if not dst:
             return
         try:
             T.build(self._key, dst, values)
             self.status.setText(f"已生成：{dst}")
             QMessageBox.information(self, "完成", f"生成好了：\n{dst}")
+        except PermissionError:
+            # 装到 Program Files 之类的地方、或桌面被锁，会报需要管理员权限；改写到程序数据目录
+            alt = Path(sysenv.data_dir()) / "模板输出" / Path(dst).name
+            try:
+                alt.parent.mkdir(parents=True, exist_ok=True)
+                T.build(self._key, str(alt), values)
+                self.status.setText(f"已生成：{alt}")
+                QMessageBox.information(self, "完成", f"原位置写不进去（需要管理员权限），已改存到：\n{alt}")
+            except Exception as exc:  # noqa: BLE001
+                QMessageBox.warning(self, "生成失败", str(exc))
         except Exception as exc:  # noqa: BLE001
             QMessageBox.warning(self, "生成失败", str(exc))

@@ -15,6 +15,7 @@
 import importlib.util as _ilu
 import os
 import sysconfig
+from pathlib import Path
 
 SCRIPT = "main.py"
 
@@ -95,6 +96,14 @@ for _n in _NEEDED:
         binaries.append((_p, "."))
     else:
         _missing.append(_n)
+# PySide6 / shiboken6 的共享库与 Qt 库：PyInstaller 的 hook 在 aarch64 + --target 安装时收不全，这里显式补
+for _mod in ("PySide6", "shiboken6"):
+    _spec = _ilu.find_spec(_mod)
+    if _spec and _spec.submodule_search_locations:
+        _d = Path(_spec.submodule_search_locations[0])
+        for _so in list(_d.glob("*.so*")) + list(_d.glob("Qt/lib/*.so*")):
+            _dest = "PySide6/Qt/lib" if _so.parent.name == "lib" else "."
+            binaries.append((str(_so.resolve()), _dest))
 print(f"[build_linux.spec] 显式收集 {len(binaries)} 个 .so；缺 {_missing}")
 
 a = Analysis(

@@ -16,7 +16,7 @@ from PySide6.QtWidgets import (QCheckBox, QComboBox, QFileDialog, QGridLayout,
 
 from gwtyper.core import scanim, sysenv
 from gwtyper.core import pdf_engine
-from gwtyper.ui._tools_extra import _write_table_docx
+from gwtyper.core.formdoc import write_table_docx as _write_table_docx
 from ui.filepanel import FilePanel, accept_suffix, card, hint
 
 IMG_EXT = {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}
@@ -284,7 +284,7 @@ class StatPage(QWidget):
             QMessageBox.information(self, "还没统计", "先点「开始统计」。")
             return
         dst, _ = QFileDialog.getSaveFileName(self, "导出 CSV",
-                                             str(Path(sysenv.desktop_dir()) / "字数统计.csv"),
+                                             str(Path(sysenv.export_dir()) / "字数统计.csv"),
                                              "CSV (*.csv)")
         if not dst:
             return
@@ -348,7 +348,7 @@ class DeskewPage(QWidget):
         rl.addWidget(self.chk_trim)
         row = QHBoxLayout()
         row.addWidget(QLabel("保存到"))
-        self.out = QLineEdit(str(Path(sysenv.desktop_dir()) / "扫描件整理"))
+        self.out = QLineEdit(str(Path(sysenv.export_dir()) / "扫描件整理"))
         row.addWidget(self.out, 1)
         self.btn_browse = QPushButton("浏览…")
         row.addWidget(self.btn_browse)
@@ -489,7 +489,7 @@ class FormPage(QWidget):
             return
         dst, _ = QFileDialog.getSaveFileName(
             self, "保存 Word 表",
-            str(Path(sysenv.desktop_dir()) / f"{self.title.text().replace(' ', '') or '表格'}.docx"),
+            str(Path(sysenv.export_dir()) / f"{self.title.text().replace(' ', '') or '表格'}.docx"),
             "Word (*.docx)")
         if not dst:
             return

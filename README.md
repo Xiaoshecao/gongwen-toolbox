@@ -84,12 +84,23 @@ GitHub 直连慢时，在下面任一前缀后面直接拼上 release 文件地�
 例（Windows 版）：
 
 ```
-https://gh-proxy.com/https://github.com/Xiaoshecao/gongwen-toolbox/releases/download/v3.4/gongwen-toolbox-3.5-windows-x64.exe
+https://gh-proxy.com/https://github.com/Xiaoshecao/gongwen-toolbox/releases/download/v4.1/gongwen-toolbox-4.1-windows-x64.exe
 ```
 
-四个文件都在 [Releases v3.5](https://github.com/Xiaoshecao/gongwen-toolbox/releases/tag/v3.5)：
+当前版本 **[Releases v4.1](https://github.com/Xiaoshecao/gongwen-toolbox/releases/tag/v4.1)** 共 5 个文件：
 
-- `gongwen-toolbox-3.5-windows-x64.exe`（177 MB）
-- `gongwen-toolbox-3.5-linux-arm64-portable.tar.gz`（136 MB）
-- `gongwen-toolbox-3.5-linux-arm64.AppImage`（223 MB）
-- `LICENSE-AGPL-3.0.txt`（许可证全文）
+| 系统 | 文件 | 大小 |
+|---|---|---|
+| Windows 10/11 x64 | `gongwen-toolbox-4.1-windows-x64.exe` | 217 MB |
+| Linux x86_64 | `gongwen-toolbox-4.1-x86_64.AppImage` | 287 MB |
+| Linux x86_64 | `gongwen-toolbox-4.1-linux-x86_64.tar.gz` | 318 MB |
+| 麒麟 V10 / 统信 UOS（ARM64） | `gongwen-toolbox-4.1-arm64.AppImage` | 139 MB |
+| 麒麟 V10 / 统信 UOS（ARM64） | `gongwen-toolbox-4.1-linux-arm64.tar.gz` | 156 MB |
+
+> Windows 版是单文件 exe，**双击运行**，会在同目录建 `rt` 解包目录，请放在有写权限的文件夹里。Linux 版先 `chmod +x` 再双击；tar.gz 解压后运行 `运行.sh`。
+
+### 4.1 新增了什么
+
+- **表格排版**：给一份排好的 Excel 样表（.xlsx），学出列宽、行高、表头/正文字体字号、对齐、边框和打印页边距，再把别的表格一键套成同样的版式（值不动，只改版式）。
+- **从文件学格式标准**：给一份已排好的公文，直接学出页边距、字体字号、行距、缩进，存成自己的格式标准。
+- **修复**：模板生成不再需要管理员权限（默认输出目录会自动挑一个能写的位置）；输出目录统一走同样逻辑；打包补齐 `fontTools`。

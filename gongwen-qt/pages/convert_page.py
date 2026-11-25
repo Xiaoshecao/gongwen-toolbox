@@ -114,7 +114,7 @@ class ConvertPage(QWidget):
 
         row2 = QHBoxLayout()
         row2.addWidget(QLabel("保存到"))
-        self.out_edit = QLineEdit(str(Path(sysenv.desktop_dir()) / "转换结果"))
+        self.out_edit = QLineEdit(str(Path(sysenv.export_dir()) / "转换结果"))
         row2.addWidget(self.out_edit, 1)
         self.btn_browse = QPushButton("浏览…")
         row2.addWidget(self.btn_browse)

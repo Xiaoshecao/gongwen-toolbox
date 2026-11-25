@@ -11,7 +11,7 @@ from .about import AboutDialog
 from .sidebar import Sidebar
 
 NAV = [
-    ("公文处理", ["公文排版", "公文模板库"]),
+    ("公文处理", ["公文排版", "表格排版", "公文模板库"]),
     ("文档处理", ["格式转换", "OCR 识别"]),
     ("办公小工具", ["批量重命名", "字数统计", "扫描件纠偏", "签到表·交接单", "图片压缩", "文件查重"]),
     ("PDF 工具", ["PDF 工具箱"]),
@@ -54,6 +54,7 @@ class MainWindow(QMainWindow):
         from pages.convert_page import ConvertPage
         from pages.format_page import FormatPage
         from pages.ocr_page import OcrPage
+        from pages.table_page import TablePage
         from pages.template_page import TemplatePage
         from pages.tools_pages import DeskewPage, FormPage, RenamePage, StatPage
         from pages.batch_pages import (DupPage, ImageCompressPage, ListDiffPage,
@@ -78,6 +79,8 @@ class MainWindow(QMainWindow):
                     pages.append(ConvertPage())
                 elif name == "OCR 识别":
                     pages.append(OcrPage())
+                elif name == "表格排版":
+                    pages.append(TablePage())
                 elif name == "公文模板库":
                     pages.append(TemplatePage())
                 elif name == "批量重命名":

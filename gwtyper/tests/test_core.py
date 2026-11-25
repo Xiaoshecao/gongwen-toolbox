@@ -26,9 +26,9 @@ from gwtyper.core.text_check import check_text      # noqa: E402
 SAMPLES = [
     # 前两份本身是合规稿；第三份是「有毛病的原件」，已知必改 4 处，
     # 排完版再体检才是 0（那一步在别处验证过）。
-    ("示例-重阳节走访慰问.docx", "news", 0),
-    ("述职述廉报告-示例.docx", "report", 0),
-    ("示例-工作机制（试行）.docx", "gb9704", 4),
+    ("发城镇重阳节前夕走访慰问老年人.docx", "news", 0),
+    ("述职述廉报告-谭钊（最终版）.docx", "report", 0),
+    ("发城镇新时代文明实践项目培育工作机制（试行）.docx", "gb9704", 4),
 ]
 
 _fails: list[str] = []
